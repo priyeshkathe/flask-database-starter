@@ -194,3 +194,14 @@ if __name__ == '__main__':
 #   Then load with python-dotenv (already done in this file)
 #
 # =============================================================================
+
+
+# =============================================================================
+# EXERCISE:
+# =============================================================================
+#
+# 1. Set up PostgreSQL locally and connect your app
+# 2. Compare query performance between SQLite and PostgreSQL
+# 3. Add connection error handling
+#
+# =============================================================================
