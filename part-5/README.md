@@ -12,6 +12,7 @@ Switching to PostgreSQL/MySQL with environment configuration
 ## Prerequisites
 - Complete all previous parts
 - Install: `pip install psycopg2-binary pymysql python-dotenv`
+- PostgreSQL Server: https://www.pgadmin.org/download/pgadmin-4-windows/
 
 ## How to Run
 
@@ -26,6 +27,7 @@ python app.py
 ```bash
 # Install PostgreSQL driver
 pip install psycopg2-binary
+
 
 # Create .env file
 cp .env.example .env
@@ -106,6 +108,9 @@ SECRET_KEY=your-secret-key
 FLASK_DEBUG=True
 ```
 
+```
+Note: Copy .env.example to .env and use  package python-dotenv to access environment variables defined in .env e.g os.getenv('SECRET_KEY') to acces the value as defined in .env file
+```
 ### Option 2: Terminal
 ```bash
 # Windows
