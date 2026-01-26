@@ -149,7 +149,7 @@ if __name__ == '__main__':
 #
 # 2. request.form['field_name']
 #    - Gets the value from HTML form input with that name
-#
+#   
 # 3. redirect(url_for('function_name'))
 #    - Sends user to another page after action completes
 #
@@ -158,13 +158,10 @@ if __name__ == '__main__':
 #    - Categories: 'success', 'danger', 'warning', 'info'
 #
 # =============================================================================
-
-
 # =============================================================================
 # EXERCISE:
 # =============================================================================
 #
 # 1. Add a "Search" feature to find students by name
 # 2. Add validation to check if email already exists before adding
-#
-# =============================================================================
+# ============================================================================= 
