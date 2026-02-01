@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Management</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        input { margin: 5px; }
+        button { margin: 5px; }
+        .book { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<h2>Book Management</h2>
+
+<h3>Add Book</h3>
+<input id="title" placeholder="Title">
+<input id="year" placeholder="Year">
+<input id="authorId" placeholder="Author ID">
+<button onclick="addBook()">Add Book</button>
+
+<h3>Books List</h3>
+<div id="books"></div>
+
+<script>
+const API = "http://127.0.0.1:5000/api/books";
+
+function loadBooks() {
+    fetch(API)
+        .then(res => res.json())
+        .then(data => {
+            const div = document.getElementById("books");
+            div.innerHTML = "";
+            data.books.forEach(b => {
+                div.innerHTML += `
+                    <div class="book">
+                        <b>${b.title}</b> (${b.year || ""})<br>
+                        Author: ${b.author.name}<br>
+                        <button onclick="deleteBook(${b.id})">Delete</button>
+                    </div>
+                `;
+            });
+        });
+}
+
+function addBook() {
+    fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            title: title.value,
+            year: year.value,
+            author_id: authorId.value
+        })
+    }).then(() => {
+        title.value = year.value = authorId.value = "";
+        loadBooks();
+    });
+}
+
+function deleteBook(id) {
+    fetch(`${API}/${id}`, { method: "DELETE" })
+        .then(() => loadBooks());
+}
+
+loadBooks();
+</script>
+
+</body>
+</html>
