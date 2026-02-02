@@ -1,61 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Author Management</title>
-    <style>
-        body { font-family: Arial; margin: 30px; }
-        input { margin: 5px; }
-        button { margin: 5px; }
-        .author { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-    </style>
+    <title>Authors</title>
+    <meta charset="UTF-8">
 </head>
 <body>
 
-<h2>Author Management</h2>
+<h1>Author Management</h1>
 
 <h3>Add Author</h3>
-<input id="name" placeholder="Name">
-<input id="bio" placeholder="Bio">
-<input id="city" placeholder="City">
+<input type="text" id="name" placeholder="Author Name">
+<input type="text" id="bio" placeholder="Bio">
+<input type="text" id="city" placeholder="City">
 <button onclick="addAuthor()">Add Author</button>
 
-<h3>Authors List</h3>
-<div id="authors"></div>
+<hr>
+
+<h3>Author List</h3>
+<ul id="authorList"></ul>
 
 <script>
-const API = "http://127.0.0.1:5000/api/authors";
+const API = "http://localhost:5000/api/authors";
 
 function loadAuthors() {
     fetch(API)
         .then(res => res.json())
         .then(data => {
-            const div = document.getElementById("authors");
-            div.innerHTML = "";
-            data.authors.forEach(a => {
-                div.innerHTML += `
-                    <div class="author">
-                        <b>${a.name}</b><br>
-                        ${a.bio || ""}<br>
-                        ${a.city || ""}<br>
-                        <button onclick="deleteAuthor(${a.id})">Delete</button>
-                    </div>
+            const list = document.getElementById("authorList");
+            list.innerHTML = "";
+
+            data.authors.forEach(author => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <b>${author.name}</b> (${author.city || "N/A"})
+                    <button onclick="deleteAuthor(${author.id})">Delete</button>
                 `;
+                list.appendChild(li);
             });
         });
 }
 
 function addAuthor() {
+    const name = document.getElementById("name").value;
+    const bio = document.getElementById("bio").value;
+    const city = document.getElementById("city").value;
+
     fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: name.value,
-            bio: bio.value,
-            city: city.value
-        })
+        body: JSON.stringify({ name, bio, city })
     }).then(() => {
-        name.value = bio.value = city.value = "";
         loadAuthors();
+        document.getElementById("name").value = "";
+        document.getElementById("bio").value = "";
+        document.getElementById("city").value = "";
     });
 }
 

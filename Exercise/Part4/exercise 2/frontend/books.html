@@ -1,68 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Management</title>
-    <style>
-        body { font-family: Arial; margin: 30px; }
-        input { margin: 5px; }
-        button { margin: 5px; }
-        .book { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-    </style>
+    <title>Books</title>
+    <meta charset="UTF-8">
 </head>
 <body>
 
-<h2>Book Management</h2>
+<h1>Book Management</h1>
 
 <h3>Add Book</h3>
-<input id="title" placeholder="Title">
-<input id="year" placeholder="Year">
-<input id="authorId" placeholder="Author ID">
+<input type="text" id="title" placeholder="Book Title">
+<input type="number" id="year" placeholder="Year">
+
+<select id="authorSelect"></select>
+
 <button onclick="addBook()">Add Book</button>
 
-<h3>Books List</h3>
-<div id="books"></div>
+<hr>
+
+<h3>Book List</h3>
+<ul id="bookList"></ul>
 
 <script>
-const API = "http://127.0.0.1:5000/api/books";
+const BOOK_API = "http://localhost:5000/api/books";
+const AUTHOR_API = "http://localhost:5000/api/authors";
 
-function loadBooks() {
-    fetch(API)
+function loadAuthors() {
+    fetch(AUTHOR_API)
         .then(res => res.json())
         .then(data => {
-            const div = document.getElementById("books");
-            div.innerHTML = "";
-            data.books.forEach(b => {
-                div.innerHTML += `
-                    <div class="book">
-                        <b>${b.title}</b> (${b.year || ""})<br>
-                        Author: ${b.author.name}<br>
-                        <button onclick="deleteBook(${b.id})">Delete</button>
-                    </div>
+            const select = document.getElementById("authorSelect");
+            select.innerHTML = "";
+
+            data.authors.forEach(author => {
+                const option = document.createElement("option");
+                option.value = author.id;
+                option.textContent = author.name;
+                select.appendChild(option);
+            });
+        });
+}
+
+function loadBooks() {
+    fetch(BOOK_API)
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById("bookList");
+            list.innerHTML = "";
+
+            data.books.forEach(book => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <b>${book.title}</b> (${book.year || "N/A"})
+                    - Author: ${book.author.name}
+                    <button onclick="deleteBook(${book.id})">Delete</button>
                 `;
+                list.appendChild(li);
             });
         });
 }
 
 function addBook() {
-    fetch(API, {
+    const title = document.getElementById("title").value;
+    const year = document.getElementById("year").value;
+    const author_id = document.getElementById("authorSelect").value;
+
+    fetch(BOOK_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            title: title.value,
-            year: year.value,
-            author_id: authorId.value
-        })
+        body: JSON.stringify({ title, year, author_id })
     }).then(() => {
-        title.value = year.value = authorId.value = "";
         loadBooks();
+        document.getElementById("title").value = "";
+        document.getElementById("year").value = "";
     });
 }
 
 function deleteBook(id) {
-    fetch(`${API}/${id}`, { method: "DELETE" })
+    fetch(`${BOOK_API}/${id}`, { method: "DELETE" })
         .then(() => loadBooks());
 }
 
+loadAuthors();
 loadBooks();
 </script>
 
