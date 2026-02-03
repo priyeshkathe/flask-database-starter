@@ -22,7 +22,7 @@ app.secret_key = os.getenv('1234', 'fallback-1234')  # Get from env or use
 
 # Get database URL from environment variable
 # Falls back to SQLite if not set
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///default.db')
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///flask_demo.db')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
