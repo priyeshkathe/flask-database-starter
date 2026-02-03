@@ -6,7 +6,6 @@
 # 2. Compare query performance between SQLite and PostgreSQL
 # 3. Add connection error handling
 #
-# =============================================================================
 
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
@@ -17,11 +16,9 @@ from dotenv import load_dotenv  # Load .env file
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'fallback-secret-key')  # Get from env or use fallback
+app.secret_key = os.getenv('1234', 'fallback-1234')  # Get from env or use 
 
-# =============================================================================
 # DATABASE CONFIGURATION
-# =============================================================================
 
 # Get database URL from environment variable
 # Falls back to SQLite if not set
@@ -39,11 +36,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 db = SQLAlchemy(app)
 
-
-# =============================================================================
 # MODEL
-# =============================================================================
-
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
@@ -55,10 +48,8 @@ class Product(db.Model):
         return f'<Product {self.name}>'
 
 
-# =============================================================================
-# ROUTES
-# =============================================================================
 
+# ROUTES
 @app.route('/')
 def index():
     products = Product.query.all()
@@ -101,10 +92,7 @@ def delete_product(id):
     return redirect(url_for('index'))
 
 
-# =============================================================================
 # INITIALIZE DATABASE
-# =============================================================================
-
 def init_db():
     with app.app_context():
         db.create_all()
